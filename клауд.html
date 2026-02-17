@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akkerman.GO — Доставка</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#FF6B00;--pl:rgba(255,107,0,.15);--dark:#111116;--card:#1C1C24;--card2:#22222C;--border:rgba(255,255,255,.07);--text:#E8E8F0;--muted:#888898;--green:#22C55E;--sw:270px}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--dark);color:var(--text);display:flex}
+.sidebar{width:var(--sw);background:#16161E;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 18px;flex-shrink:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;padding:0 8px 32px}
+.logo-icon{width:38px;height:38px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.logo-text span{color:var(--primary)}
+.nav-s{margin-bottom:28px}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;padding:0 12px;margin-bottom:8px}
+.nav-link{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;color:var(--muted);font-size:14px;font-weight:500;transition:.18s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
+.nav-link:hover{background:var(--border);color:var(--text)}
+.nav-link.active{background:var(--pl);color:var(--primary);font-weight:700}
+.nav-icon{font-size:17px;width:22px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.courier-btn{margin-top:auto;background:linear-gradient(135deg,#FF6B00,#FF3D00);color:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px;cursor:pointer;border:none;width:100%;transition:opacity .2s}
+.courier-btn:hover{opacity:.88}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;height:100vh}
+header{padding:18px 36px;background:#16161E;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:10;flex-shrink:0}
+.search-bar{flex:1;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:10px;transition:border-color .2s}
+.search-bar:focus-within{border-color:var(--primary)}
+.search-bar input{background:none;border:none;color:var(--text);font-size:14px;outline:none;width:100%}
+.search-bar input::placeholder{color:var(--muted)}
+.h-right{display:flex;align-items:center;gap:14px;margin-left:auto}
+.balance{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600}
+.balance span{color:var(--primary)}
+.avatar{width:40px;height:40px;background:var(--pl);border:2px solid var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
+.hero{margin:32px 36px 28px;background:linear-gradient(125deg,#FF6B00 0%,#FF3D00 60%,#D62700 100%);border-radius:24px;padding:36px 40px;display:flex;align-items:center;justify-content:space-between;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;right:-60px;top:-60px;width:280px;height:280px;background:rgba(255,255,255,.06);border-radius:50%}
+.hero::after{content:'';position:absolute;right:80px;bottom:-80px;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%}
+.hero-t{position:relative;z-index:1}
+.hero-t h1{font-size:28px;font-weight:900;line-height:1.2;margin-bottom:10px}
+.hero-t p{font-size:14px;opacity:.85;margin-bottom:20px}
+.hero-btn{background:#fff;color:var(--primary);border:none;border-radius:12px;padding:12px 24px;font-weight:800;font-size:14px;cursor:pointer;transition:transform .15s}
+.hero-btn:hover{transform:scale(1.04)}
+.hero-emoji{font-size:72px;position:relative;z-index:1;line-height:1}
+.tabs-bar{display:flex;gap:8px;padding:0 36px;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.tab-btn{padding:12px 18px;border:none;background:none;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;border-bottom:2.5px solid transparent;transition:.18s;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.content{padding:28px 36px 120px}
+.s-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.s-title{font-size:18px;font-weight:800}
+.see-all{color:var(--primary);font-size:13px;font-weight:600;cursor:pointer}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.pill{padding:9px 18px;background:var(--card);border:1px solid var(--border);border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;transition:.18s}
+.pill:hover,.pill.active{background:var(--pl);border-color:var(--primary);color:var(--primary)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.card{background:var(--card);border-radius:18px;overflow:hidden;border:1px solid var(--border);transition:.22s;cursor:pointer}
+.card:hover{background:var(--card2);border-color:rgba(255,107,0,.3);transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.3)}
+.card-img{height:155px;background-size:cover;background-position:center;position:relative}
+.card-badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:#fff}
+.card-fav{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .2s;cursor:pointer}
+.card-fav:hover{background:rgba(255,107,0,.5)}
+.card-body{padding:16px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:6px}
+.card-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:14px}
+.d-info{display:flex;align-items:center;gap:14px}
+.c-price{background:var(--pl);color:var(--primary);padding:3px 9px;border-radius:6px;font-weight:700;font-size:12px}
+.menu-btn{width:100%;padding:10px;background:none;border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.18s}
+.menu-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:16px}
+.p-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.2s}
+.p-card:hover{border-color:rgba(255,107,0,.3);transform:translateY(-3px)}
+.p-img{height:130px;background-size:cover;background-position:center}
+.p-body{padding:12px 14px}
+.p-name{font-size:13px;font-weight:600;margin-bottom:8px;line-height:1.3}
+.p-foot{display:flex;justify-content:space-between;align-items:center}
+.p-price{font-size:15px;font-weight:800;color:var(--primary)}
+.add-c{width:30px;height:30px;background:var(--primary);border:none;border-radius:50%;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s}
+.add-c:hover{transform:scale(1.15)}
+.promo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:32px}
+.promo-card{border-radius:16px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;transition:transform .2s}
+.promo-card:hover{transform:scale(1.02)}
+.promo-card.a{background:linear-gradient(135deg,#FF6B00,#FF9D00)}
+.promo-card.b{background:linear-gradient(135deg,#7B2FF7,#5B0FD2)}
+.promo-card.c{background:linear-gradient(135deg,#0EA5E9,#0369A1)}
+.promo-t h4{font-size:15px;font-weight:800;margin-bottom:4px}
+.promo-t p{font-size:12px;opacity:.85}
+.promo-icon{font-size:38px}
+.order-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:12px;transition:border-color .2s}
+.order-card:hover{border-color:rgba(255,107,0,.25)}
+.o-icon{font-size:28px;flex-shrink:0}
+.o-info{flex:1}
+.o-name{font-size:14px;font-weight:700}
+.o-date{font-size:12px;color:var(--muted);margin-top:3px}
+.o-status{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.o-status.del{background:rgba(34,197,94,.15);color:var(--green)}
+.o-status.act{background:var(--pl);color:var(--primary)}
+.o-total{font-weight:800;font-size:15px}
+.empty{text-align:center;padding:70px 40px;color:var(--muted)}
+.empty .big{font-size:60px;margin-bottom:16px}
+.empty h3{font-size:18px;margin-bottom:8px;color:var(--text)}
+.empty p{font-size:14px}
+.cart-float{position:fixed;bottom:32px;left:calc(var(--sw) + 36px);right:36px;background:var(--text);color:var(--dark);border-radius:18px;padding:16px 24px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:100}
+.cart-float.hidden{transform:translateY(120px);opacity:0;pointer-events:none}
+.c-count{background:var(--primary);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+.c-label{font-weight:700;font-size:15px;flex:1}
+.c-total{font-weight:800;font-size:17px}
+.checkout-btn{background:var(--dark);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s}
+.checkout-btn:hover{opacity:.8}
+.prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px}
+.prof-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
+.prof-card h4{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
+.stat-n{font-size:30px;font-weight:900;color:var(--primary)}
+.stat-l{font-size:13px;color:var(--muted);margin-top:4px}
+.av-lg{width:72px;height:72px;background:var(--pl);border:3px solid var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:14px}
+.u-name{font-size:20px;font-weight:800}
+.u-ph{font-size:13px;color:var(--muted);margin-top:4px}
+.edit-btn{margin-top:14px;background:var(--pl);color:var(--primary);border:1px solid var(--primary);border-radius:10px;padding:8px 18px;font-weight:700;font-size:13px;cursor:pointer}
+.tab-page{display:none}
+.tab-page.active{display:block}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🚀</div>
+    <div class="logo-text">AKKERMAN<span>.GO</span></div>
+  </div>
+  <div class="nav-s">
+    <div class="nav-label">Навигация</div>
+    <button class="nav-link active" onclick="go('home',this)"><span class="nav-icon">🏠</span>Главная</button>
+    <button class="nav-link" onclick="go('restaurants',this)"><span class="nav-icon">🍴</span>Рестораны</button>
+    <button class="nav-link" onclick="go('shops',this)"><span class="nav-icon">🛒</span>Магазины</button>
+    <button class="nav-link" onclick="go('pharmacy',this)"><span class="nav-icon">💊</span>Аптеки</button>
+  </div>
+  <div class="nav-s">
+    <div class="nav-label">Личное</div>
+    <button class="nav-link" onclick="go('orders',this)"><span class="nav-icon">📋</span>Мои заказы<span class="nav-badge">2</span></button>
+    <button class="nav-link" onclick="go('favorites',this)"><span class="nav-icon">❤️</span>Избранное</button>
+    <button class="nav-link" onclick="go('profile',this)"><span class="nav-icon">👤</span>Профиль</button>
+  </div>
+  <button class="courier-btn">🚲 Стать курьером</button>
+</div>
+<div class="main">
+  <header>
+    <div class="search-bar"><span>🔍</span><input type="text" placeholder="Поиск ресторанов, еды, товаров…"></div>
+    <div class="h-right">
+      <div class="balance">Баланс: <span>0.00 грн</span></div>
+      <div class="avatar">👤</div>
+    </div>
+  </header>
+  <!-- HOME -->
+  <div class="tab-page active" id="page-home">
+    <div class="hero">
+      <div class="hero-t">
+        <h1>Доставка в<br>Белгород-Днестровском 🏙️</h1>
+        <p>Еда, продукты и лекарства — прямо к вашей двери</p>
+        <button class="hero-btn" onclick="go('restaurants',document.querySelectorAll('.nav-link')[1])">Заказать сейчас</button>
+      </div>
+      <div class="hero-emoji">🍕</div>
+    </div>
+    <div class="content">
+      <div class="s-header"><div class="s-title">Специальные предложения</div></div>
+      <div class="promo-grid">
+        <div class="promo-card a"><div class="promo-t"><h4>−20% на первый заказ</h4><p>Промокод: FIRST20</p></div><div class="promo-icon">🎁</div></div>
+        <div class="promo-card b"><div class="promo-t"><h4>Бесплатная доставка</h4><p>При заказе от 500 грн</p></div><div class="promo-icon">🛵</div></div>
+        <div class="promo-card c"><div class="promo-t"><h4>Быстро и свежо</h4><p>Среднее время 30 мин</p></div><div class="promo-icon">⚡</div></div>
+      </div>
+      <div class="s-header">
+        <div class="s-title">Популярные рестораны</div>
+        <div class="see-all" onclick="go('restaurants',document.querySelectorAll('.nav-link')[1])">Все →</div>
+      </div>
+      <div class="pills" id="hp">
+        <div class="pill active" onclick="fp(this,'hp')">🍔 Бургеры</div>
+        <div class="pill" onclick="fp(this,'hp')">🍕 Пицца</div>
+        <div class="pill" onclick="fp(this,'hp')">🍣 Суши</div>
+        <div class="pill" onclick="fp(this,'hp')">🌮 Фастфуд</div>
+        <div class="pill" onclick="fp(this,'hp')">🥗 Здоровое</div>
+      </div>
+      <div class="grid" id="hg"></div>
+    </div>
+  </div>
+  <!-- RESTAURANTS -->
+  <div class="tab-page" id="page-restaurants">
+    <div class="tabs-bar" id="rt">
+      <button class="tab-btn active" onclick="it(this,'rt')">Все</button>
+      <button class="tab-btn" onclick="it(this,'rt')">🍔 Бургеры</button>
+      <button class="tab-btn" onclick="it(this,'rt')">🍕 Пицца</button>
+      <button class="tab-btn" onclick="it(this,'rt')">🍣 Суши</button>
+      <button class="tab-btn" onclick="it(this,'rt')">🌮 Фастфуд</button>
+      <button class="tab-btn" onclick="it(this,'rt')">🥗 Здоровое</button>
+      <button class="tab-btn" onclick="it(this,'rt')">🍰 Десерты</button>
+    </div>
+    <div class="content">
+      <div class="s-header"><div class="s-title">Рестораны в Белгород-Днестровском</div><div style="font-size:13px;color:var(--muted)">6 заведений</div></div>
+      <div class="grid" id="rg"></div>
+    </div>
+  </div>
+  <!-- SHOPS -->
+  <div class="tab-page" id="page-shops">
+    <div class="content">
+      <div class="s-header"><div class="s-title">Магазины</div></div>
+      <div class="grid" id="sg" style="margin-bottom:32px"></div>
+      <div class="s-header"><div class="s-title">Товары дня</div><div class="see-all">Все товары →</div></div>
+      <div class="p-grid" id="pg"></div>
+    </div>
+  </div>
+  <!-- PHARMACY -->
+  <div class="tab-page" id="page-pharmacy">
+    <div class="content">
+      <div class="s-header"><div class="s-title">Аптеки</div></div>
+      <div class="grid" id="phg" style="margin-bottom:32px"></div>
+      <div class="s-header"><div class="s-title">Популярные товары</div></div>
+      <div class="p-grid" id="ppg"></div>
+    </div>
+  </div>
+  <!-- ORDERS -->
+  <div class="tab-page" id="page-orders">
+    <div class="content">
+      <div class="s-header"><div class="s-title">Мои заказы</div></div>
+      <div class="order-card"><div class="o-icon">🍔</div><div class="o-info"><div class="o-name">Бургер Шоп — 2 позиции</div><div class="o-date">Сегодня, 14:32</div></div><div class="o-status act">В пути 🛵</div><div class="o-total">430 грн</div></div>
+      <div class="order-card"><div class="o-icon">🍕</div><div class="o-info"><div class="o-name">Пицца на Победе — 1 позиция</div><div class="o-date">Вчера, 19:15</div></div><div class="o-status del">Доставлен ✓</div><div class="o-total">290 грн</div></div>
+      <div class="order-card"><div class="o-icon">🛒</div><div class="o-info"><div class="o-name">АТБ-Маркет — 5 позиций</div><div class="o-date">15 февраля, 11:00</div></div><div class="o-status del">Доставлен ✓</div><div class="o-total">875 грн</div></div>
+    </div>
+  </div>
+  <!-- FAVORITES -->
+  <div class="tab-page" id="page-favorites">
+    <div class="content">
+      <div class="s-header"><div class="s-title">Избранное</div></div>
+      <div class="empty"><div class="big">❤️</div><h3>Пока ничего нет</h3><p>Нажмите ❤️ на карточке, чтобы добавить в избранное</p></div>
+    </div>
+  </div>
+  <!-- PROFILE -->
+  <div class="tab-page" id="page-profile">
+    <div class="content">
+      <div class="s-header"><div class="s-title">Мой профиль</div></div>
+      <div class="prof-grid">
+        <div class="prof-card" style="grid-column:span 2"><div class="av-lg">👤</div><div class="u-name">Иван Иванов</div><div class="u-ph">+380 XX XXX XXXX</div><button class="edit-btn">Редактировать</button></div>
+        <div class="prof-card"><h4>Заказов</h4><div class="stat-n">12</div><div class="stat-l">за всё время</div></div>
+        <div class="prof-card"><h4>Потрачено</h4><div class="stat-n">3 490</div><div class="stat-l">гривен</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="cart-float hidden" id="cart">
+  <div class="c-count" id="cC">0</div>
+  <div class="c-label">🛒 Ваша корзина</div>
+  <div class="c-total" id="cT">0 грн</div>
+  <button class="checkout-btn">Оформить заказ →</button>
+</div>
+<script>
+const R=[
+  {name:'Бургер Шоп',time:'30–40 мин',delivery:'50 грн',rating:'4.8',tag:'Бургеры',img:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&q=80'},
+  {name:'Пицца на Победе',time:'20–30 мин',delivery:'50 грн',rating:'4.7',tag:'Пицца',img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80'},
+  {name:'Суши Харбор',time:'40–50 мин',delivery:'70 грн',rating:'4.6',tag:'Суши',img:'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&q=80'},
+  {name:'Шаурма & Ко',time:'15–25 мин',delivery:'40 грн',rating:'4.5',tag:'Фастфуд',img:'https://images.unsplash.com/photo-1561651188-d207bbec4ec3?w=500&q=80'},
+  {name:'Green Bowl',time:'25–35 мин',delivery:'60 грн',rating:'4.9',tag:'Здоровое',img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80'},
+  {name:'Пекарня Аромат',time:'20–30 мин',delivery:'45 грн',rating:'4.7',tag:'Десерты',img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80'},
+];
+const S=[
+  {name:'АТБ-Маркет',time:'40–60 мин',delivery:'80 грн',rating:'4.4',tag:'Супермаркет',img:'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80'},
+  {name:'Сільпо Express',time:'30–45 мин',delivery:'75 грн',rating:'4.6',tag:'Супермаркет',img:'https://images.unsplash.com/photo-1604719312566-8912e9c8a213?w=500&q=80'},
+];
+const PH=[
+  {name:'Аптека №1',time:'20–30 мин',delivery:'50 грн',rating:'4.8',tag:'Аптека',img:'https://images.unsplash.com/photo-1631549916768-4119b4220291?w=500&q=80'},
+  {name:'Аптека Здоров',time:'25–35 мин',delivery:'50 грн',rating:'4.7',tag:'Аптека',img:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&q=80'},
+];
+const PR=[
+  {name:'Хлеб Бородинский',price:45,img:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&q=80'},
+  {name:'Молоко 1L',price:38,img:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300&q=80'},
+  {name:'Яйца C1 (10шт)',price:75,img:'https://images.unsplash.com/photo-1506976785307-8732e854ad03?w=300&q=80'},
+  {name:'Масло сливочное',price:62,img:'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=300&q=80'},
+  {name:'Гречка 800г',price:55,img:'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&q=80'},
+  {name:'Апельсины 1кг',price:89,img:'https://images.unsplash.com/photo-1547514701-42782101795e?w=300&q=80'},
+];
+const MP=[
+  {name:'Нурофен x12',price:95,img:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&q=80'},
+  {name:'Аспирин 500мг',price:35,img:'https://images.unsplash.com/photo-1631549916768-4119b4220291?w=300&q=80'},
+  {name:'Vitamax C x30',price:120,img:'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300&q=80'},
+  {name:'Маска защитная',price:25,img:'https://images.unsplash.com/photo-1584515933487-779824d29309?w=300&q=80'},
+];
+function rc(r){return`<div class="card" onclick="ac('${r.name}',150)"><div class="card-img" style="background-image:url('${r.img}')"><div class="card-badge">⭐ ${r.rating}</div><div class="card-fav" onclick="event.stopPropagation()">❤️</div></div><div class="card-body"><div class="card-title">${r.name}</div><div class="card-meta"><div class="d-info"><span>⏱ ${r.time}</span><span>🏷 ${r.tag}</span></div><span class="c-price">${r.delivery}</span></div><button class="menu-btn" onclick="event.stopPropagation()">Перейти в меню →</button></div></div>`}
+function pc(p){return`<div class="p-card"><div class="p-img" style="background-image:url('${p.img}')"></div><div class="p-body"><div class="p-name">${p.name}</div><div class="p-foot"><div class="p-price">${p.price} грн</div><button class="add-c" onclick="ac('${p.name}',${p.price})">+</button></div></div></div>`}
+document.getElementById('hg').innerHTML=R.slice(0,4).map(rc).join('');
+document.getElementById('rg').innerHTML=R.map(rc).join('');
+document.getElementById('sg').innerHTML=S.map(rc).join('');
+document.getElementById('phg').innerHTML=PH.map(rc).join('');
+document.getElementById('pg').innerHTML=PR.map(pc).join('');
+document.getElementById('ppg').innerHTML=MP.map(pc).join('');
+function go(n,b){document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));if(b)b.classList.add('active');document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active')}
+function it(b,id){document.getElementById(id).querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+function fp(p,id){document.getElementById(id).querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));p.classList.add('active')}
+let ci=0,cs=0;
+function ac(n,p){ci++;cs+=p;document.getElementById('cC').textContent=ci;document.getElementById('cT').textContent=cs+' грн';const c=document.getElementById('cart');c.classList.remove('hidden');c.style.transform='scale(1.03)';setTimeout(()=>{c.style.transform=''},150)}
+</script>
+</body>
+</html>
